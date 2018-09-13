@@ -6,7 +6,7 @@
 #    By: rdurst <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 16:16:42 by rdurst            #+#    #+#              #
-#    Updated: 2018/09/09 04:49:17 by rdurst           ###   ########.fr        #
+#    Updated: 2018/09/13 04:02:12 by rdurst           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,9 @@ CC=gcc
 INCLUDES= -I ./includes -I ./libft/includes/
 LIBFT= libft/libft.a
 SRCS= ./srcs/main.c\
+		./srcs/list.c\
 
-OPTIONS= -Wall -Wextra -Werror
+OPTIONS= -Wall -Wextra -Werror -ltermcap 
 RM= rm -rf
 
 RED = \033[1;31m
