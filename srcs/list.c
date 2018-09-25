@@ -51,7 +51,7 @@ int			lst_init(t_args **head, char **args)
 			|| !(tmp->name = ft_strdup(args[i])))
 		return (-1);
 	tmp->current = 1;
-	tmp->selected = 1;
+	tmp->selected = 0;
 	tmp->exist = 1;
 	tmp->prev = NULL;
 	tmp->next = NULL;

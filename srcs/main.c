@@ -12,6 +12,11 @@
 
 #include "ft_select.h"
 
+int	tc_putc(int c)
+{
+	return (write(STDERR_FILENO, &c, 1));
+}
+
 int		raw_term(void)
 {
 	char			*term_type;
@@ -19,22 +24,24 @@ int		raw_term(void)
 
 	if (!(term_type = getenv("TERM")))
 	{
-		ft_putendl("couldn't reach 'TERM' environement variable.");
+		ft_putendl_fd("couldn't reach 'TERM' environement variable.", STDERR_FILENO);
 		return (0);
 	}
 	if (tgetent(NULL, term_type) == -1)
 	{
-		ft_putendl("couldn't find terminal in the termcap database.");
+		ft_putendl_fd("couldn't find terminal in the termcap database.", STDERR_FILENO);
 		return (0);
 	}
-	tcgetattr(0, &s_term);
+	tcgetattr(STDERR_FILENO, &s_term);
 	s_term.c_lflag &= ~ECHO;
 	s_term.c_lflag &= ~ICANON;
 	s_term.c_lflag &= ~OPOST;
 	s_term.c_cc[VTIME] = 0;
 	s_term.c_cc[VMIN] = 1;
-	if (tcsetattr(0, TCSADRAIN, &s_term) == -1)
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
 		return (0);
+	tputs(tgetstr("vi", NULL), STDERR_FILENO, tc_putc);
+	tputs(tgetstr("ti", NULL), STDERR_FILENO, tc_putc);
 	return (1);
 }
 
@@ -45,23 +52,111 @@ int		def_term(void)
 
 	if (!(term_type = getenv("TERM")))
 	{
-		ft_putendl("couldn't reach 'TERM' environement variable.");
+		ft_putendl_fd("couldn't reach 'TERM' environement variable.", STDERR_FILENO);
 		return (0);
 	}
 	if (tgetent(NULL, term_type) == -1)
 	{
-		ft_putendl("couldn't find terminal in the termcap database.");
+		ft_putendl_fd("couldn't find terminal in the termcap database.", STDERR_FILENO);
 		return (0);
 	}
-	tcgetattr(0, &s_term);
+	tcgetattr(STDERR_FILENO, &s_term);
 	s_term.c_lflag |= ~ECHO;
 	s_term.c_lflag |= ~ICANON;
 	s_term.c_lflag |= ~OPOST;
-	s_term.c_cc[VTIME] = 0;
-	s_term.c_cc[VMIN] = 1;
-	if (tcsetattr(0, TCSADRAIN, &s_term) == -1)
-		return (0);
+	tputs(tgetstr("ve", NULL), STDERR_FILENO, tc_putc);
+	tputs(tgetstr("te", NULL), STDERR_FILENO, tc_putc);
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
+		exit(-1);
+	else
+		exit(1);
 	return (1);
+}
+
+void		disp_rows(void)
+{
+	struct winsize	ws;
+	int		x;
+	int		y;
+
+	x = -1;
+	y = -1;
+	ioctl(STDERR_FILENO, TIOCGWINSZ, &ws);
+	tputs(tgoto(tgetstr("cm", NULL), 0, 0), STDERR_FILENO, tc_putc);
+	ft_putstr_fd(BG_WHITE, STDERR_FILENO);
+	while (++y < 3)
+	{
+		tputs(tgoto(tgetstr("cm", NULL), 0, y), STDERR_FILENO, tc_putc);
+		while (++x < ws.ws_col)
+			write(STDERR_FILENO, " ", 1);
+		x = -1;
+	}
+	y = -1;
+	while (++y <= 3)
+	{
+		tputs(tgoto(tgetstr("cm", NULL), 0, ws.ws_row - y), STDERR_FILENO, tc_putc);
+		while (++x < ws.ws_col)
+			write(STDERR_FILENO, " ", 1);
+		x = -1;
+	}
+	ft_putstr(BG_RESET);
+	return ;
+}
+
+void		disp_args(t_args *head)
+{
+	int i;
+	int indent;
+	struct winsize ws;
+
+	i = 4;
+	ioctl(STDERR_FILENO, TIOCGWINSZ, &ws);
+	indent = ws.ws_col / 3;
+	tputs(tgoto(tgetstr("cm", NULL), indent, i), STDERR_FILENO, tc_putc);
+	if (head->next == NULL)
+		ft_putstr(head->name);
+	else
+	{	
+		while (head)
+		{
+			tputs(tgoto(tgetstr("cm", NULL), indent, i++), STDERR_FILENO, tc_putc);
+			if (head->current == 1)
+				tputs(tgetstr("us", NULL), STDERR_FILENO, tc_putc);
+			if (head->selected == 1)
+				tputs(tgetstr("so", NULL), STDERR_FILENO, tc_putc);
+			ft_putstr(head->name);
+			tputs(tgetstr("ue", NULL), STDERR_FILENO, tc_putc);
+			tputs(tgetstr("se", NULL), STDERR_FILENO, tc_putc);
+			head = head->next;
+		}
+	}
+	return ;
+}
+
+int		ft_select(t_args **head)
+{
+	int	ret;
+	char	buf[5];
+	while (1)
+	{
+		signal(SIGINT, sigint_handler);
+		clean();
+		disp_rows();
+		disp_args(*head);
+		ret = read(STDERR_FILENO, buf, 4);
+		buf[ret] = '\0';
+		press_up(head, buf);
+		press_down(head, buf);
+		press_space(head, buf);
+		if (buf[0] == KEY_ESCAPE && buf[1] == KEY_END)
+			def_term();
+	}
+	return (1);
+}
+
+void		clean(void)
+{
+	tputs(tgetstr("cl", NULL), STDERR_FILENO, tc_putc);
 }
 
 int		main(int ac, char **av)
@@ -70,14 +165,13 @@ int		main(int ac, char **av)
 
 	if (ac < 2)
 	{
-		ft_putendl("Usage : './ft_select <files...>'");
+		ft_putendl_fd("Usage : './ft_select <files...>'", STDERR_FILENO);
 		return (-1);
 	}
 	if (!raw_term())
 		return (0);
 	head = NULL;
 	lst_init(&head, av);
-	if (!def_term())
-		return (0);
+	ft_select(&head);
 	return (0);
 }

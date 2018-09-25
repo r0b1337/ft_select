@@ -15,9 +15,12 @@ CC=gcc
 INCLUDES= -I ./includes -I ./libft/includes/
 LIBFT= libft/libft.a
 SRCS= ./srcs/main.c\
-		./srcs/list.c\
+	./srcs/list.c\
+	./srcs/cursor.c\
+	./srcs/keys.c\
+	./srcs/signal_handler.c\
 
-OPTIONS= -Wall -Wextra -Werror -ltermcap 
+OPTIONS= -Wall -Wextra -Werror -ltermcap
 RM= rm -rf
 
 RED = \033[1;31m

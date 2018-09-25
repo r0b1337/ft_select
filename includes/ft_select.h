@@ -40,6 +40,11 @@
 # define KEY_RETURN			10
 # define KEY_END			0
 
+# define BG_BLUE			"\033[104m"
+# define BG_GREEN			"\033[102m"
+# define BG_WHITE			"\033[47m"
+# define BG_RESET			"\033[49m"
+
 typedef struct		s_args
 {
 	char			*name;
@@ -54,4 +59,16 @@ int					raw_term(void);
 int					def_term(void);
 
 int					lst_init(t_args **head, char **args);
+
+int					move_down(t_args **head);
+int					move_up(t_args **head);
+int					toggle_arg(t_args **head);
+
+int					press_up(t_args **head, char *key);
+int					press_down(t_args **head, char *key);
+int					press_space(t_args **head, char *key);
+
+void					sigint_handler(int signo);
+
+void					clean(void);
 #endif
