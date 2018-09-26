@@ -6,7 +6,7 @@
 /*   By: rdurst <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/09 04:50:16 by rdurst            #+#    #+#             */
-/*   Updated: 2018/09/13 04:09:58 by rdurst           ###   ########.fr       */
+/*   Updated: 2018/09/26 01:36:59 by rdurst           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,18 @@ int					raw_term(void);
 int					def_term(void);
 
 int					lst_init(t_args **head, char **args);
+t_args				*get_curr(t_args **head);
 
 int					move_down(t_args **head);
 int					move_up(t_args **head);
 int					toggle_arg(t_args **head);
+int					del_arg(t_args **head);
 
 int					press_up(t_args **head, char *key);
 int					press_down(t_args **head, char *key);
 int					press_space(t_args **head, char *key);
+int					press_delete(t_args **head, char *key);
+int					press_escape(t_args **head, char *key);
 
 void					sigint_handler(int signo);
 

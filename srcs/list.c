@@ -6,7 +6,7 @@
 /*   By: rdurst <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/13 02:20:32 by rdurst            #+#    #+#             */
-/*   Updated: 2018/09/13 03:43:26 by rdurst           ###   ########.fr       */
+/*   Updated: 2018/09/26 02:19:44 by rdurst           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,16 @@ int			lst_init(t_args **head, char **args)
 			return (-1);
 	*head = tmp;
 	return (1);
+}
+
+t_args	*get_curr(t_args **head)
+{
+	t_args *ret;
+
+	ret = *head;
+	if (!ret->next)
+		return (NULL);
+	while (ret->next && (!ret->current || !ret->exist))
+			ret = ret->next;
+	return (ret);
 }

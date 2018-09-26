@@ -6,7 +6,7 @@
 /*   By: rdurst <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/09 05:01:21 by rdurst            #+#    #+#             */
-/*   Updated: 2018/09/13 04:11:04 by rdurst           ###   ########.fr       */
+/*   Updated: 2018/09/26 03:33:50 by rdurst           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ int		raw_term(void)
 	s_term.c_lflag &= ~OPOST;
 	s_term.c_cc[VTIME] = 0;
 	s_term.c_cc[VMIN] = 1;
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
-		return (0);
 	tputs(tgetstr("vi", NULL), STDERR_FILENO, tc_putc);
 	tputs(tgetstr("ti", NULL), STDERR_FILENO, tc_putc);
+	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
+		return (0);
 	return (1);
 }
 
@@ -67,9 +67,8 @@ int		def_term(void)
 	tputs(tgetstr("ve", NULL), STDERR_FILENO, tc_putc);
 	tputs(tgetstr("te", NULL), STDERR_FILENO, tc_putc);
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
-		exit(-1);
-	else
-		exit(1);
+		return (0);
+	exit(1);
 	return (1);
 }
 
@@ -111,7 +110,7 @@ void		disp_args(t_args *head)
 
 	i = 4;
 	ioctl(STDERR_FILENO, TIOCGWINSZ, &ws);
-	indent = ws.ws_col / 3;
+	indent = 2;
 	tputs(tgoto(tgetstr("cm", NULL), indent, i), STDERR_FILENO, tc_putc);
 	if (head->next == NULL)
 		ft_putstr(head->name);
@@ -119,14 +118,17 @@ void		disp_args(t_args *head)
 	{	
 		while (head)
 		{
-			tputs(tgoto(tgetstr("cm", NULL), indent, i++), STDERR_FILENO, tc_putc);
-			if (head->current == 1)
-				tputs(tgetstr("us", NULL), STDERR_FILENO, tc_putc);
-			if (head->selected == 1)
-				tputs(tgetstr("so", NULL), STDERR_FILENO, tc_putc);
-			ft_putstr(head->name);
-			tputs(tgetstr("ue", NULL), STDERR_FILENO, tc_putc);
-			tputs(tgetstr("se", NULL), STDERR_FILENO, tc_putc);
+			if (head->exist)
+			{
+				tputs(tgoto(tgetstr("cm", NULL), indent, i++), STDERR_FILENO, tc_putc);
+				if (head->current == 1)
+					tputs(tgetstr("us", NULL), STDERR_FILENO, tc_putc);
+				if (head->selected == 1)
+					tputs(tgetstr("so", NULL), STDERR_FILENO, tc_putc);
+				ft_putstr(head->name);
+				tputs(tgetstr("ue", NULL), STDERR_FILENO, tc_putc);
+				tputs(tgetstr("se", NULL), STDERR_FILENO, tc_putc);
+			}
 			head = head->next;
 		}
 	}
@@ -148,8 +150,8 @@ int		ft_select(t_args **head)
 		press_up(head, buf);
 		press_down(head, buf);
 		press_space(head, buf);
-		if (buf[0] == KEY_ESCAPE && buf[1] == KEY_END)
-			def_term();
+		press_delete(head, buf);
+		press_escape(head, buf);
 	}
 	return (1);
 }
