@@ -3,5 +3,5 @@
 void	sigint_handler(int signo)
 {
 	if (signo == SIGINT)
-		def_term();
+		clean_exit();
 }

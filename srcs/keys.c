@@ -6,7 +6,7 @@
 /*   By: rdurst <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/26 01:19:49 by rdurst            #+#    #+#             */
-/*   Updated: 2018/09/26 03:35:02 by rdurst           ###   ########.fr       */
+/*   Updated: 2018/09/30 04:26:05 by rdurst           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,8 @@ int		press_escape(t_args **head, char *key)
 {
 	if (key[0] == KEY_ESCAPE && key[1] == KEY_END)
 	{
-		def_term();
-		(void)head;
-		exit(1);
+		free_list(head);
+		clean_exit();
 	}
 	return (0);
 }

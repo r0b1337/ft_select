@@ -6,11 +6,19 @@
 /*   By: rdurst <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/09 05:01:21 by rdurst            #+#    #+#             */
-/*   Updated: 2018/09/26 03:33:50 by rdurst           ###   ########.fr       */
+/*   Updated: 2018/09/30 04:33:58 by rdurst           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_select.h"
+
+void	clean_exit(void)
+{
+	if (!def_term())
+		exit(-1);
+	else
+		exit(1);
+}
 
 int	tc_putc(int c)
 {
@@ -68,7 +76,6 @@ int		def_term(void)
 	tputs(tgetstr("te", NULL), STDERR_FILENO, tc_putc);
 	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
 		return (0);
-	exit(1);
 	return (1);
 }
 
@@ -80,7 +87,11 @@ void		disp_rows(void)
 
 	x = -1;
 	y = -1;
-	ioctl(STDERR_FILENO, TIOCGWINSZ, &ws);
+	if (ioctl(STDERR_FILENO, TIOCGWINSZ, &ws) == -1)
+	{
+		ft_putendl_fd("SCREEN SIZE IS TOO SMALL", STDERR_FILENO);
+		return ;
+	}
 	tputs(tgoto(tgetstr("cm", NULL), 0, 0), STDERR_FILENO, tc_putc);
 	ft_putstr_fd(BG_WHITE, STDERR_FILENO);
 	while (++y < 3)
@@ -152,6 +163,7 @@ int		ft_select(t_args **head)
 		press_space(head, buf);
 		press_delete(head, buf);
 		press_escape(head, buf);
+		press_enter(head, buf);
 	}
 	return (1);
 }

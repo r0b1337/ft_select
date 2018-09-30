@@ -6,7 +6,7 @@
 /*   By: rdurst <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/13 02:20:32 by rdurst            #+#    #+#             */
-/*   Updated: 2018/09/26 02:19:44 by rdurst           ###   ########.fr       */
+/*   Updated: 2018/09/30 04:14:17 by rdurst           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int			lst_init(t_args **head, char **args)
 	i = 1;
 	tmp = *head;
 	if (!(tmp = malloc(sizeof(t_args))) 
-			|| !(tmp->name = ft_strdup(args[i])))
+			|| !(tmp->name = ft_strdup(args[1])))
 		return (-1);
 	tmp->current = 1;
 	tmp->selected = 0;
@@ -72,4 +72,25 @@ t_args	*get_curr(t_args **head)
 	while (ret->next && (!ret->current || !ret->exist))
 			ret = ret->next;
 	return (ret);
+}
+
+int		send_ret(t_args **head)
+{
+	t_args *tmp;
+
+	tmp = *head;
+	if (!tmp)
+		return (-1);
+	while (tmp)
+	{
+		if (tmp->selected)
+		{
+			ft_putstr_fd(tmp->name, STDOUT_FILENO);
+			ft_putchar_fd(' ', STDOUT_FILENO);
+		}
+		tmp = tmp->next;
+	}
+	def_term();
+	exit(1);
+	return (1);
 }

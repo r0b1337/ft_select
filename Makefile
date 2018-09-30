@@ -6,7 +6,7 @@
 #    By: rdurst <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 16:16:42 by rdurst            #+#    #+#              #
-#    Updated: 2018/09/13 04:02:12 by rdurst           ###   ########.fr        #
+#    Updated: 2018/09/30 04:37:51 by rdurst           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,8 @@ SRCS= ./srcs/main.c\
 	./srcs/list.c\
 	./srcs/cursor.c\
 	./srcs/keys.c\
+	./srcs/keys2.c\
+	./srcs/free.c\
 	./srcs/signal_handler.c\
 
 OPTIONS= -Wall -Wextra -Werror -ltermcap
