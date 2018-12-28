@@ -29,7 +29,7 @@
 # define KEY_RIGHT			"\033[Cm"
 # define KEY_LEFT			"\033[Dm"
 # define KEY_DELETE			"\033[3~"
-# define KEY_BACKSPACE		127
+# define KEY_BACKSPACE			127
 # define KEY_COLOR			126
 # define KEY_RESIZE			-69
 # define KEY_S_NONE			45
@@ -55,8 +55,8 @@ typedef struct		s_args
 	struct s_args	*prev;
 }					t_args;
 
-int					raw_term(void);
-int					def_term(void);
+void					raw_term(void);
+void					def_term(void);
 
 int					lst_init(t_args **head, char **args);
 t_args				*get_curr(t_args **head);

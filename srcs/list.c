@@ -90,7 +90,6 @@ int		send_ret(t_args **head)
 		}
 		tmp = tmp->next;
 	}
-	def_term();
-	exit(1);
+	clean_exit();
 	return (1);
 }

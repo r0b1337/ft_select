@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME=ft_select
-CC=gcc
+CC=clang
 INCLUDES= -I ./includes -I ./libft/includes/
 LIBFT= libft/libft.a
 SRCS= ./srcs/main.c\

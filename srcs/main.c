@@ -12,12 +12,12 @@
 
 #include "ft_select.h"
 
+struct termios orig_termios;
+
 void	clean_exit(void)
 {
-	if (!def_term())
-		exit(-1);
-	else
-		exit(1);
+	def_term();
+	exit(EXIT_SUCCESS);
 }
 
 int	tc_putc(int c)
@@ -25,58 +25,38 @@ int	tc_putc(int c)
 	return (write(STDERR_FILENO, &c, 1));
 }
 
-int		raw_term(void)
+void		raw_term(void)
 {
 	char			*term_type;
-	struct termios	s_term;
+	struct termios		raw;
 
+	tcgetattr(STDERR_FILENO, &orig_termios);
+	raw = orig_termios;
 	if (!(term_type = getenv("TERM")))
 	{
 		ft_putendl_fd("couldn't reach 'TERM' environement variable.", STDERR_FILENO);
-		return (0);
+		exit(EXIT_FAILURE);
 	}
 	if (tgetent(NULL, term_type) == -1)
 	{
 		ft_putendl_fd("couldn't find terminal in the termcap database.", STDERR_FILENO);
-		return (0);
+		exit(EXIT_FAILURE);
 	}
-	tcgetattr(STDERR_FILENO, &s_term);
-	s_term.c_lflag &= ~ECHO;
-	s_term.c_lflag &= ~ICANON;
-	s_term.c_lflag &= ~OPOST;
-	s_term.c_cc[VTIME] = 0;
-	s_term.c_cc[VMIN] = 1;
+	raw.c_lflag &= ~ECHO;
+	raw.c_lflag &= ~ICANON;
+	raw.c_lflag &= ~OPOST;
+	raw.c_cc[VTIME] = 0;
+	raw.c_cc[VMIN] = 1;
+	tcsetattr(STDERR_FILENO, TCSADRAIN, &raw);
 	tputs(tgetstr("vi", NULL), STDERR_FILENO, tc_putc);
 	tputs(tgetstr("ti", NULL), STDERR_FILENO, tc_putc);
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
-		return (0);
-	return (1);
 }
 
-int		def_term(void)
+void		def_term(void)
 {
-	char			*term_type;
-	struct termios	s_term;
-
-	if (!(term_type = getenv("TERM")))
-	{
-		ft_putendl_fd("couldn't reach 'TERM' environement variable.", STDERR_FILENO);
-		return (0);
-	}
-	if (tgetent(NULL, term_type) == -1)
-	{
-		ft_putendl_fd("couldn't find terminal in the termcap database.", STDERR_FILENO);
-		return (0);
-	}
-	tcgetattr(STDERR_FILENO, &s_term);
-	s_term.c_lflag |= ~ECHO;
-	s_term.c_lflag |= ~ICANON;
-	s_term.c_lflag |= ~OPOST;
+	tcsetattr(STDERR_FILENO, TCSAFLUSH, &orig_termios);
 	tputs(tgetstr("ve", NULL), STDERR_FILENO, tc_putc);
 	tputs(tgetstr("te", NULL), STDERR_FILENO, tc_putc);
-	if (tcsetattr(STDERR_FILENO, TCSADRAIN, &s_term) == -1)
-		return (0);
-	return (1);
 }
 
 void		disp_rows(void)
@@ -182,8 +162,7 @@ int		main(int ac, char **av)
 		ft_putendl_fd("Usage : './ft_select <files...>'", STDERR_FILENO);
 		return (-1);
 	}
-	if (!raw_term())
-		return (0);
+	raw_term();
 	head = NULL;
 	lst_init(&head, av);
 	ft_select(&head);

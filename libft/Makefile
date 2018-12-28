@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = libft.a
-CC = gcc
+CC =clang
 CFLAGS = -Wall -Wextra -Werror
 CFILES = $(addsuffix .c, $(SRCS))
 OFILES = $(addsuffix .o, $(SRCS))
