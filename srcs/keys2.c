@@ -15,7 +15,7 @@
 int		press_enter(t_args **head, char *key)
 {
 	if (key[0] == KEY_RETURN && key[1] == KEY_END)
-		return (send_ret(head));
+		return (send_ret(*head));
 	else
 		return (1);
 }

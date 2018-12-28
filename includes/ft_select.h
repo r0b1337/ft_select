@@ -45,6 +45,8 @@
 # define BG_WHITE			"\033[47m"
 # define BG_RESET			"\033[49m"
 
+struct termios orig_termios;
+
 typedef struct		s_args
 {
 	char			*name;
@@ -60,7 +62,7 @@ void					def_term(void);
 
 int					lst_init(t_args **head, char **args);
 t_args				*get_curr(t_args **head);
-int					send_ret(t_args **head);
+int					send_ret(t_args *head);
 
 int					free_list(t_args **head);
 

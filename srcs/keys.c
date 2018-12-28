@@ -38,7 +38,7 @@ int	press_space(t_args **head, char *key)
 		return (0);
 }
 
-int		press_escape(t_args **head, char *key)
+int	press_escape(t_args **head, char *key)
 {
 	if (key[0] == KEY_ESCAPE && key[1] == KEY_END)
 	{
@@ -48,7 +48,7 @@ int		press_escape(t_args **head, char *key)
 	return (0);
 }
 
-int		press_delete(t_args **head, char *key)
+int	press_delete(t_args **head, char *key)
 {
 	if (ft_memcmp(key, KEY_DELETE, ft_strlen(key)) == 0)
 		return (del_arg(head));

@@ -74,21 +74,21 @@ t_args	*get_curr(t_args **head)
 	return (ret);
 }
 
-int		send_ret(t_args **head)
+int		send_ret(t_args *head)
 {
 	t_args *tmp;
 
-	tmp = *head;
-	if (!tmp)
+	tmp = head;
+	if (!head)
 		return (-1);
-	while (tmp)
+	while (head)
 	{
-		if (tmp->selected)
+		if (head->selected && head->exist)
 		{
-			ft_putstr_fd(tmp->name, STDOUT_FILENO);
+			ft_putstr_fd(head->name, STDOUT_FILENO);
 			ft_putchar_fd(' ', STDOUT_FILENO);
 		}
-		tmp = tmp->next;
+		head = head->next;
 	}
 	clean_exit();
 	return (1);

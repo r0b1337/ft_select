@@ -12,8 +12,6 @@
 
 #include "ft_select.h"
 
-struct termios orig_termios;
-
 void	clean_exit(void)
 {
 	def_term();
@@ -54,7 +52,7 @@ void		raw_term(void)
 
 void		def_term(void)
 {
-	tcsetattr(STDERR_FILENO, TCSAFLUSH, &orig_termios);
+	tcsetattr(STDERR_FILENO, TCSADRAIN, &orig_termios);
 	tputs(tgetstr("ve", NULL), STDERR_FILENO, tc_putc);
 	tputs(tgetstr("te", NULL), STDERR_FILENO, tc_putc);
 }
@@ -89,7 +87,7 @@ void		disp_rows(void)
 			write(STDERR_FILENO, " ", 1);
 		x = -1;
 	}
-	ft_putstr(BG_RESET);
+	ft_putstr_fd(BG_RESET, STDERR_FILENO);
 	return ;
 }
 
@@ -116,7 +114,7 @@ void		disp_args(t_args *head)
 					tputs(tgetstr("us", NULL), STDERR_FILENO, tc_putc);
 				if (head->selected == 1)
 					tputs(tgetstr("so", NULL), STDERR_FILENO, tc_putc);
-				ft_putstr(head->name);
+				ft_putstr_fd(head->name, STDERR_FILENO);
 				tputs(tgetstr("ue", NULL), STDERR_FILENO, tc_putc);
 				tputs(tgetstr("se", NULL), STDERR_FILENO, tc_putc);
 			}
