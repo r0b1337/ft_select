@@ -93,3 +93,17 @@ int		send_ret(t_args *head)
 	clean_exit();
 	return (1);
 }
+
+int		ft_lstlen(t_args *head)
+{
+	int 	ret;
+	
+	ret = 0;
+	while (head)
+	{	
+		if (head->exist)
+			ret++;
+		head = head->next;
+	}
+	return (ret);
+}

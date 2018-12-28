@@ -96,30 +96,40 @@ void		disp_args(t_args *head)
 	int i;
 	int indent;
 	struct winsize ws;
+	int	size;
+	t_args *tmp;
 
 	i = 4;
 	ioctl(STDERR_FILENO, TIOCGWINSZ, &ws);
 	indent = 2;
+	size = ft_lstlen(head);
+	tmp = head;
 	tputs(tgoto(tgetstr("cm", NULL), indent, i), STDERR_FILENO, tc_putc);
-	if (head->next == NULL)
-		ft_putstr(head->name);
+	if (tmp->next == NULL)
+		ft_putstr(tmp->name);
 	else
 	{	
-		while (head)
-		{
-			if (head->exist)
+		while (tmp)
+		{	
+			if (i > ws.ws_row - 4)
+			{
+				indent = ws.ws_col / 2 + 2;
+				i = 4;
+			}
+			if (tmp->exist)
 			{
 				tputs(tgoto(tgetstr("cm", NULL), indent, i++), STDERR_FILENO, tc_putc);
-				if (head->current == 1)
+				if (tmp->current == 1)
 					tputs(tgetstr("us", NULL), STDERR_FILENO, tc_putc);
-				if (head->selected == 1)
+				if (tmp->selected == 1)
 					tputs(tgetstr("so", NULL), STDERR_FILENO, tc_putc);
-				ft_putstr_fd(head->name, STDERR_FILENO);
+				ft_putstr_fd(tmp->name, STDERR_FILENO);
 				tputs(tgetstr("ue", NULL), STDERR_FILENO, tc_putc);
 				tputs(tgetstr("se", NULL), STDERR_FILENO, tc_putc);
 			}
-			head = head->next;
+			tmp = tmp->next;
 		}
+		ft_putchar_fd('\n', STDERR_FILENO);
 	}
 	return ;
 }
@@ -130,7 +140,7 @@ int		ft_select(t_args **head)
 	char	buf[5];
 	while (1)
 	{
-		signal(SIGINT, sigint_handler);
+		signal_handler();
 		clean();
 		disp_rows();
 		disp_args(*head);

@@ -107,6 +107,7 @@ char			**ft_strsplit(char const *s, char c);
 void			ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 void			ft_intendl(int n);
+void			ft_intendl_fd(int n, int fd);
 int				ft_nbrlen(int nb);
 
 #endif

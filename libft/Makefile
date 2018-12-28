@@ -41,6 +41,7 @@ SRCS =\
 	ft_putnbr_fd\
 	ft_putstr\
 	ft_putstr_fd\
+	ft_intendl_fd\
 	ft_putstr_tab\
 	ft_strcat\
 	ft_strchr\

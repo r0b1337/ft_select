@@ -62,6 +62,7 @@ void					def_term(void);
 
 int					lst_init(t_args **head, char **args);
 t_args				*get_curr(t_args **head);
+int				ft_lstlen(t_args *head);
 int					send_ret(t_args *head);
 
 int					free_list(t_args **head);
@@ -79,6 +80,8 @@ int					press_escape(t_args **head, char *key);
 int					press_enter(t_args **head, char *key);
 
 void					sigint_handler(int signo);
+void					sigwinch_handler(int signo);
+void					signal_handler(void);
 
 void					clean(void);
 void					clean_exit(void);
