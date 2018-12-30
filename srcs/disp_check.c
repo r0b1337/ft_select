@@ -51,7 +51,7 @@ int	disp_check(t_args *head, struct winsize ws)
 	height = get_lst_height(head);
 	while ((height / split) > ws.ws_row - 3 - 3 - 1 - 1)
 		split++;
-	if ((height * split) + (2 * (split + 1)) > ws.ws_col)
+	if ((width + 2) * split > ws.ws_col)
 		return (-1);
 	else
 		return (split);
