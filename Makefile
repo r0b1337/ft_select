@@ -21,6 +21,7 @@ SRCS= ./srcs/main.c\
 	./srcs/keys2.c\
 	./srcs/free.c\
 	./srcs/signal_handler.c\
+	./srcs/disp_check.c\
 
 OPTIONS= -Wall -Wextra -Werror -ltermcap
 RM= rm -rf

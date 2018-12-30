@@ -65,6 +65,10 @@ t_args				*get_curr(t_args **head);
 int				ft_lstlen(t_args *head);
 int					send_ret(t_args *head);
 
+int					get_lst_height(t_args *head);
+int					get_lst_width(t_args *head);
+int					disp_check(t_args *head, struct winsize ws);
+
 int					free_list(t_args **head);
 
 int					move_down(t_args **head);

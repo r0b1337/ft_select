@@ -12,8 +12,8 @@ void	sigwinch_handler(int signo)
 
 	if (signo == SIGWINCH)
 	{
-		byte[1] = KEY_RESIZE;
-		byte[0] = KEY_END;
+		byte[0] = KEY_RESIZE;
+		byte[1] = KEY_END;
 		ioctl(STDERR_FILENO, TIOCSTI, byte);
 	}
 }

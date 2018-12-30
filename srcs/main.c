@@ -93,32 +93,34 @@ void		disp_rows(void)
 
 void		disp_args(t_args *head)
 {
-	int i;
-	int indent;
+	int x;
+	int y;
+	int cols;
 	struct winsize ws;
-	int	size;
 	t_args *tmp;
 
-	i = 4;
+	x = 2;
+	y = 4;
 	ioctl(STDERR_FILENO, TIOCGWINSZ, &ws);
-	indent = 2;
-	size = ft_lstlen(head);
 	tmp = head;
-	tputs(tgoto(tgetstr("cm", NULL), indent, i), STDERR_FILENO, tc_putc);
+	tputs(tgoto(tgetstr("cm", NULL), x, y), STDERR_FILENO, tc_putc);
+	cols = disp_check(head, ws);
+	if (disp_check(head, ws) == -1 || ws.ws_row < 8)
+		clean_exit();
 	if (tmp->next == NULL)
-		ft_putstr(tmp->name);
+		ft_putstr_fd(tmp->name, STDERR_FILENO);
 	else
 	{	
 		while (tmp)
 		{	
-			if (i > ws.ws_row - 4)
-			{
-				indent = ws.ws_col / 2 + 2;
-				i = 4;
-			}
 			if (tmp->exist)
 			{
-				tputs(tgoto(tgetstr("cm", NULL), indent, i++), STDERR_FILENO, tc_putc);
+				if (y > (get_lst_height(head) / cols) + 8)
+				{
+					y = 4;
+					x = x + get_lst_width(head) + 2;
+				}
+				tputs(tgoto(tgetstr("cm", NULL), x, y++), STDERR_FILENO, tc_putc);
 				if (tmp->current == 1)
 					tputs(tgetstr("us", NULL), STDERR_FILENO, tc_putc);
 				if (tmp->selected == 1)
@@ -138,12 +140,13 @@ int		ft_select(t_args **head)
 {
 	int	ret;
 	char	buf[5];
+
 	while (1)
 	{
-		signal_handler();
 		clean();
 		disp_rows();
 		disp_args(*head);
+		signal_handler();
 		ret = read(STDERR_FILENO, buf, 4);
 		buf[ret] = '\0';
 		press_up(head, buf);
@@ -152,6 +155,8 @@ int		ft_select(t_args **head)
 		press_delete(head, buf);
 		press_escape(head, buf);
 		press_enter(head, buf);
+		if (buf[0] == KEY_RESIZE && buf[1] == KEY_END)
+			continue;
 	}
 	return (1);
 }
