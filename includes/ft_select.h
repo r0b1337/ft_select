@@ -61,13 +61,19 @@ void					raw_term(void);
 void					def_term(void);
 
 int					lst_init(t_args **head, char **args);
-t_args				*get_curr(t_args **head);
-int				ft_lstlen(t_args *head);
+t_args					*get_curr(t_args **head);
+int					ft_lstlen(t_args *head);
 int					send_ret(t_args *head);
 
 int					get_lst_height(t_args *head);
 int					get_lst_width(t_args *head);
+
+int					tc_putc(int c);
+
+void					disp_rows(void);
 int					disp_check(t_args *head, struct winsize ws);
+int					disp_error(struct winsize ws);
+void					disp_args(t_args *head, struct winsize ws);
 
 int					free_list(t_args **head);
 
