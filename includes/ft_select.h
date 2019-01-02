@@ -24,6 +24,31 @@
 # include <sys/uio.h>
 # include <signal.h>
 
+# define C_RESET			"\033[0m"
+# define C_BOLD_ON			"\033[1m"
+# define C_ITALIC_ON			"\033[3m"
+# define C_UNDERLINE_ON			"\033[4m"
+# define C_INVERSE_ON			"\033[7m"
+# define C_BOLD_OFF			"\033[22m"
+# define C_ITALIC_OFF			"\033[23m"
+# define C_UNDERLINE_OFF		"\033[24m"
+# define C_INVERSE_OFF			"\033[27m"
+
+# define FG_BLACK			"\033[30m"
+# define FG_RED				"\033[31m"
+# define FG_GREEN			"\033[32m"
+# define FG_YELLOW			"\033[33m"
+# define FG_BLUE			"\033[34m"
+# define FG_MAGENTA			"\033[35m"
+# define FG_CYAN			"\033[36m"
+# define FG_WHITE			"\033[37m"
+# define FG_RESET			"\033[39m"
+
+# define BG_BLUE			"\033[104m"
+# define BG_GREEN			"\033[102m"
+# define BG_WHITE			"\033[47m"
+# define BG_RESET			"\033[49m"
+
 # define KEY_UP				"\033[Am"
 # define KEY_DOWN			"\033[Bm"
 # define KEY_RIGHT			"\033[Cm"
@@ -39,11 +64,6 @@
 # define KEY_ESCAPE			27
 # define KEY_RETURN			10
 # define KEY_END			0
-
-# define BG_BLUE			"\033[104m"
-# define BG_GREEN			"\033[102m"
-# define BG_WHITE			"\033[47m"
-# define BG_RESET			"\033[49m"
 
 struct termios orig_termios;
 
@@ -70,8 +90,8 @@ int					get_lst_width(t_args *head);
 
 int					tc_putc(int c);
 
-void					disp_rows(void);
 int					disp_check(t_args *head, struct winsize ws);
+void					disp_back(struct winsize ws);
 int					disp_error(struct winsize ws);
 void					disp_args(t_args *head, struct winsize ws);
 

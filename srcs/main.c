@@ -71,7 +71,7 @@ int		ft_select(t_args **head)
 			disp_error(ws);
 		else
 		{
-			disp_rows();
+			disp_back(ws);
 			disp_args(*head, ws);
 		}
 		signal_handler();

@@ -19,6 +19,7 @@ SRCS= ./srcs/main.c\
 	./srcs/cursor.c\
 	./srcs/keys.c\
 	./srcs/keys2.c\
+	./srcs/background.c\
 	./srcs/disp.c\
 	./srcs/free.c\
 	./srcs/signal_handler.c\

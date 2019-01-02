@@ -12,7 +12,7 @@
 
 #include "ft_select.h"
 
-int	disp_error(struct winsize ws)
+int		disp_error(struct winsize ws)
 {
 	char	*error_content;
 	int		x;
@@ -21,8 +21,6 @@ int	disp_error(struct winsize ws)
 	y = -1;
 	clean();
 	ft_putstr_fd(BG_BLUE, STDERR_FILENO);
-	if (ws.ws_col <= 24 || ws.ws_row <= 7)
-		return (EXIT_FAILURE);
 	while (++y < ws.ws_row)
 	{
 		x = -1;
@@ -43,40 +41,6 @@ int	disp_error(struct winsize ws)
 	return (EXIT_SUCCESS);
 }
 
-void		disp_rows(void)
-{
-	struct winsize	ws;
-	int		x;
-	int		y;
-
-	x = -1;
-	y = -1;
-	if (ioctl(STDERR_FILENO, TIOCGWINSZ, &ws) == -1)
-	{
-		ft_putendl_fd("SCREEN SIZE IS TOO SMALL", STDERR_FILENO);
-		return ;
-	}
-	tputs(tgoto(tgetstr("cm", NULL), 0, 0), STDERR_FILENO, tc_putc);
-	ft_putstr_fd(BG_WHITE, STDERR_FILENO);
-	while(++y < 3)
-	{
-		tputs(tgoto(tgetstr("cm", NULL), 0, y), STDERR_FILENO, tc_putc);
-		while (++x < ws.ws_col)
-			write(STDERR_FILENO, " ", 1);
-		x = -1;
-	}
-	y = -1;
-	while (++y <= 3)
-	{
-		tputs(tgoto(tgetstr("cm", NULL), 0, ws.ws_row - y), STDERR_FILENO, tc_putc);
-		while (++x < ws.ws_col)
-			write(STDERR_FILENO, " ", 1);
-		x = -1;
-	}
-	ft_putstr_fd(BG_RESET, STDERR_FILENO);
-	return ;
-}
-
 void		disp_args(t_args *head, struct winsize ws)
 {
 	int x;
@@ -84,7 +48,7 @@ void		disp_args(t_args *head, struct winsize ws)
 	int cols;
 	t_args *tmp;
 
-	x = 2;
+	x = 4;
 	y = 4;
 	tmp = head;
 	tputs(tgoto(tgetstr("cm", NULL), x, y), STDERR_FILENO, tc_putc);
