@@ -18,7 +18,7 @@ static int	disp_title(struct winsize ws)
 	int		x;
 	int		y;
 
-	if (!(title_content = ft_strdup("-+- ft_select -+-")))
+	if (!(title_content = ft_strdup("$> ft_select <$")))
 		return (EXIT_FAILURE);
 	x = (ws.ws_col / 2) - (ft_strlen(title_content) / 2);
 	y = 1;
