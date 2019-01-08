@@ -6,7 +6,7 @@
 /*   By: rdurst <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/09 05:01:21 by rdurst            #+#    #+#             */
-/*   Updated: 2018/09/30 04:33:58 by rdurst           ###   ########.fr       */
+/*   Updated: 2019/01/08 16:07:17 by rdurst           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ int		ft_select(t_args **head)
 		press_delete(head, buf);
 		press_escape(head, buf);
 		press_enter(head, buf);
-		if (buf[0] == KEY_RESIZE && buf[1] == KEY_END)
-			continue;
 	}
 	return (1);
 }
